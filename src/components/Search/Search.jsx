@@ -9,24 +9,18 @@ class Search extends Component {
         loading: false
     };
 
-    search = (e) => {
-        e.preventDefault();
+    search = (searchInput) => {
+        //e.preventDefault();
         this.setState({ 
-            queryInput: e.target.value
-        });
-    };
-
-    getBooks = () => {
-        console.log("getBooks: ", this.state);
-        this.setState({
+            queryInput: searchInput,
             loading: true
         });
         axios
 			.get(`http://localhost:7000/books/search/apple${this.state.queryInput}`)
 			.then(response => {
-				console.log("axios: ", response.data);
+				console.log("axios: ", Array.isArray(response.data.books));
 				this.setState({ 
-                    results: response.data,
+                    results: response.data.books,
                     loading: false 
                 });
 			})
@@ -37,7 +31,7 @@ class Search extends Component {
 
     componentDidMount() {
         console.log('componentDidMount');
-        this.getBooks();
+        this.search();
     };
 
     render() {
@@ -53,12 +47,11 @@ class Search extends Component {
                         placeholder="Search..."
                         aria-label="Search"
                         className="search"
-                        onChange={e => this.search(e)}
+                        onChange={e => this.search(e.target.value)}
                     />
-                    <button type="submit" onClick={this.getBooks}>Search...</button>
                 </div>
                 <div className="books-results">
-                    {results.books}
+                    {results}
                     {/* {results && results.map((book, index) => {
                         console.log(book);
                         const key = 'book-' + index;
