@@ -5,8 +5,7 @@ class Search extends Component {
     state = {
         queryInput: null,
         results: [],
-        isError: false,
-        loading: false
+        isError: false
     };
 
     search = (searchInput) => {
@@ -15,19 +14,18 @@ class Search extends Component {
             queryInput: searchInput,
             loading: true
         });
-        console.log(this.state.queryInput);
+        console.log("queryInput: ", this.state.queryInput);
         axios
-			.get(`http://localhost:7000/books/search/${this.state.queryInput}`)
-			.then(response => {
-				console.log("axios: ", Array.isArray(response.data.books));
-				this.setState({ 
-                    results: response.data.books,
-                    loading: false 
+            .get(`http://localhost:7000/books/search/${this.state.queryInput}`)
+            .then(response => {
+                console.log("axios: ", Array.isArray(response.data.books));
+                this.setState({ 
+                    results: response.data.books
                 });
-			})
-			.catch(error => {
-				this.setState({ isError: true });
-			});
+            })
+            .catch(error => {
+                this.setState({ isError: true });
+            });
     };
 
     componentDidMount() {
@@ -39,30 +37,21 @@ class Search extends Component {
             console.log('I HAVE DATA!!!: ', this.state.results);
         }
         const { results } = this.state;
-        return (
-            <div className="BooksSearch">
+        return <div className="BooksSearch">
                 <div className="Search">
-                    <input
-                        type="search"
-                        placeholder="Search..."
-                        aria-label="Search"
-                        className="search"
-                        onChange={e => this.search(e.target.value)}
-                    />
+                    <input type="search" placeholder="Search..." aria-label="Search" className="search" onChange={e => this.search(e.target.value)} />
                 </div>
                 <div className="books-results">
+                    <h3>{this.state.queryInput}</h3>
                     {results && results.map((book, index) => {
-                        console.log(book);
-                        const key = 'book-' + index;
-                        return (
-                            <div className="book" key={key}>
-                                {book.title}: {book.subtitle}
-                            </div>
-                        );
-                    })}
+                            console.log(book);
+                            const key = 'book-' + index;
+                            return <div className="book" key={key}>
+                                    {book.title}: {book.subtitle}
+                                </div>;
+                        })}
                 </div>
-            </div>
-        );
+            </div>;
     }
 }
 
