@@ -15,8 +15,9 @@ class Search extends Component {
             queryInput: searchInput,
             loading: true
         });
+        console.log(this.state.queryInput);
         axios
-			.get(`http://localhost:7000/books/search/apple${this.state.queryInput}`)
+			.get(`http://localhost:7000/books/search/${this.state.queryInput}`)
 			.then(response => {
 				console.log("axios: ", Array.isArray(response.data.books));
 				this.setState({ 
@@ -31,7 +32,6 @@ class Search extends Component {
 
     componentDidMount() {
         console.log('componentDidMount');
-        this.search();
     };
 
     render() {
@@ -51,17 +51,15 @@ class Search extends Component {
                     />
                 </div>
                 <div className="books-results">
-                    {results}
-                    {/* {results && results.map((book, index) => {
+                    {results && results.map((book, index) => {
                         console.log(book);
                         const key = 'book-' + index;
-                        const title = book.title;
                         return (
                             <div className="book" key={key}>
-                                {title}: {book}
+                                {book.title}: {book.subtitle}
                             </div>
                         );
-                    })} */}
+                    })}
                 </div>
             </div>
         );

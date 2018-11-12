@@ -6,7 +6,7 @@ function BookDetails(props) {
     //const movie = movies[movieKey];
     return (
         <div>
-            <h1>Book Title</h1>
+            <h1>Book Details</h1>
             <div>
                 <img
                     src=""
