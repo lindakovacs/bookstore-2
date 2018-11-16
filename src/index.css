@@ -12,3 +12,33 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+.navbar-default {
+    background-color: #6495ED;
+    border-color: #e7e7e7;
+}
+
+.navbar-default .navbar-brand {
+    color: #000;
+}
+
+.navbar-brand {
+    float: left;
+    height: 50px;
+    padding: 15px 15px;
+    font-size: 24px;
+    font-weight: bold;
+    line-height: 20px;
+}
+
+a {
+    color: #000000;
+    font-size: 18px;
+    text-decoration: none;
+}
+
+a:active, a:hover {
+    color: #2F4F4F;
+    font-weight: bold;
+    outline: 0;
+}

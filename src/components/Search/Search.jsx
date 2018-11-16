@@ -1,56 +1,96 @@
 import React, { Component } from "react";
 import axios from "axios";
+import { Link } from 'react-router-dom';
+import { FormGroup, FormControl, ControlLabel, ListGroup, ListGroupItem, Media} from 'react-bootstrap';
 
 class Search extends Component {
     state = {
-        queryInput: null,
+        queryInput: "",
         results: [],
         isError: false
     };
 
-    search = (searchInput) => {
-        //e.preventDefault();
-        this.setState({ 
-            queryInput: searchInput,
-            loading: true
-        });
-        console.log("queryInput: ", this.state.queryInput);
-        axios
-            .get(`http://localhost:7000/books/search/${this.state.queryInput}`)
-            .then(response => {
-                console.log("axios: ", Array.isArray(response.data.books));
-                this.setState({ 
-                    results: response.data.books
-                });
-            })
-            .catch(error => {
-                this.setState({ isError: true });
+    search = (e, searchInput) => {
+        e.preventDefault();
+        if (searchInput) {
+            this.setState({
+                queryInput: searchInput
+            }, () => {
+                axios
+                    .get(`http://localhost:7000/books/search/${this.state.queryInput}`)
+                    .then(response => {
+                        this.setState({
+                            results: response.data.books
+                        });
+                    })
+                    .catch(error => {
+                        this.setState({ isError: true });
+                    });
             });
+        } else {
+            this.setState({
+                queryInput: "",
+                results: [],
+                isError: false
+            });
+        }
+        //console.log("queryInput: ", this.state.queryInput);
     };
 
     componentDidMount() {
-        console.log('componentDidMount');
+        //console.log('componentDidMount');
+        this.setState({
+            queryInput: this.state.queryInput
+        })
     };
 
     render() {
-        if (this.state.results) {
-            console.log('I HAVE DATA!!!: ', this.state.results);
-        }
+        console.log('state: ', this.state);
         const { results } = this.state;
-        return <div className="BooksSearch">
-                <div className="Search">
-                    <input type="search" placeholder="Search..." aria-label="Search" className="search" onChange={e => this.search(e.target.value)} />
-                </div>
-                <div className="books-results">
-                    <h3>{this.state.queryInput}</h3>
+        return <div>
+                <form>
+                    <FormGroup>
+                        <ControlLabel>Search Bookstore</ControlLabel>
+                        <FormControl type="text" value={this.state.queryInput} placeholder="Search text" onChange={e => this.search(e, e.target.value)} />
+                        <FormControl.Feedback />
+                    </FormGroup>
+                </form>
+                <ListGroup>
+                    {this.state.queryInput ? <h3>Searching for: {this.state.queryInput}</h3> : ""}
+                    {this.state.isError ? <p>No Search Results Found</p> : ""}
                     {results && results.map((book, index) => {
-                            console.log(book);
-                            const key = 'book-' + index;
-                            return <div className="book" key={key}>
-                                    {book.title}: {book.subtitle}
-                                </div>;
-                        })}
-                </div>
+                    console.log(book);
+                    //const key = 'book-' + index;
+                    const link = "/book/" + book.id;
+                    return <ListGroupItem>
+                    <Media>
+                        <Media.Left align="top">
+                            <Link to={link}>
+                                <img src={book.imageLinks ? book.imageLinks.thumbnail : ''} alt={book.title} />
+                            </Link>
+                        </Media.Left>
+                        <Media.Body>
+                            <Media.Heading>
+                                <Link to={link}>
+                                    {book.title}: {book.subtitle ? <p>{book.subtitle}</p> : ''}
+                                </Link>
+                            </Media.Heading>
+                            <p>
+                                Author(s):<br />
+                                {book.authors ? (
+                                book.authors.join(', ')
+                                ) : (
+                                book.authors
+                                )}
+                            </p>
+                            <p>Publisher: {book.publisher ? book.publisher : ''}</p>
+                            <p>Published Date: {book.publishedDate ? book.publishedDate : ''}</p>
+                            <p>Categories: {book.categories ? book.categories.join(", ") : 'None'}</p>
+                        </Media.Body>
+                    </Media>
+                    </ListGroupItem>
+                })}
+                </ListGroup>
             </div>;
     }
 }
