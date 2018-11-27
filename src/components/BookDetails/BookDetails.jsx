@@ -2,24 +2,22 @@ import React, { Component } from 'react'
 import axios from 'axios'
 import { Media } from 'react-bootstrap'
 
-const shelfData = {
-  none: 'None',
-  wantToRead: 'Want To Read',
-  currentlyReading: 'Currently Reading',
-  read: 'Read'
-}
-
 class BookDetails extends Component {
   state = {
     bookId: '',
     bookOnShelf: 'none',
     book: {},
-    displayValue: 'None',
     isError: false,
-    myBooks: { 'Want To Read': [], 'Currently Reading': [], Read: [] },
-    selected: 'None'
+    selected: 'None',
+    shelfData: {
+      none: 'None',
+      wantToRead: 'Want To Read',
+      currentlyReading: 'Currently Reading',
+      read: 'Read'
+    }
   }
   updateShelf = e => {
+    e.preventDefault()
     console.log('updateShelf: ', e.target.value)
     this.setState(
       {
@@ -97,7 +95,7 @@ class BookDetails extends Component {
           <h3>Shelf</h3>
           <div>
             <select name='select' onChange={this.updateShelf}>
-              {Object.entries(shelfData).map((shelf, idx) => {
+              {Object.entries(this.state.shelfData).map((shelf, idx) => {
                 if (this.state.bookOnShelf === shelf[0]) {
                   console.log(this.state.selected)
                   return (
