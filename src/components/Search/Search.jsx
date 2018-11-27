@@ -7,7 +7,10 @@ class Search extends Component {
     state = {
         queryInput: "",
         results: [],
-        isError: false
+        isError: false,
+        displayValue: 'None',
+        myBooks: { 'Want To Read': [], 'Currently Reading': [], 'Read': [] },
+        selected: 'None'
     };
 
     search = (e, searchInput) => {
