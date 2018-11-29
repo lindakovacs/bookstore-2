@@ -18,7 +18,6 @@ class BookDetails extends Component {
   }
   updateShelf = e => {
     e.preventDefault()
-    console.log('updateShelf: ', e.target.value)
     this.setState(
       {
         bookId: this.props.match.params.bookId,
@@ -28,12 +27,10 @@ class BookDetails extends Component {
               axios
                     .get(`http://localhost:7000/bookshelf/update/${this.state.bookId}/${this.state.selected}`)
                     .then(response => {
-                      console.log('axios: ', response.data.book)
                       this.setState({
-                        book: response.data.book,
                         bookOnShelf: this.state.selected ? this.state.selected : 'None'
                       })
-                    })
+                    }, this.getBookDetails())
                     .catch(error => {
                       this.setState({ isError: true })
                     })
@@ -41,7 +38,6 @@ class BookDetails extends Component {
         )
   }
   componentDidMount () {
-    console.log('didmount: ', this.props.match.params.bookId)
     this.getBookDetails()
   }
   getBookDetails = () => {
@@ -54,7 +50,6 @@ class BookDetails extends Component {
                   axios
                         .get(`http://localhost:7000/book/${this.state.bookId}`)
                         .then(response => {
-                          console.log('axios: ', response.data.book)
                           this.setState({
                             book: response.data.book,
                             bookOnShelf: response.data.book.shelf
@@ -68,10 +63,9 @@ class BookDetails extends Component {
     }
   }
   render () {
-    console.log('bookdetails: ', this.state)
     const { book } = this.state
     return (
-      <div>
+      <p>
         <Media>
           <Media.Left align='top'>
             <img src={book.imageLinks ? book.imageLinks.thumbnail : ''} alt={book.title} />
@@ -97,7 +91,7 @@ class BookDetails extends Component {
             <select name='select' onChange={this.updateShelf}>
               {Object.entries(this.state.shelfData).map((shelf, idx) => {
                 if (this.state.bookOnShelf === shelf[0]) {
-                  console.log(this.state.selected)
+                  console.log('current shelf: ', this.state.selected)
                   return (
                     <option value={shelf[0]} selected={shelf[0]}>
                         {shelf[1]}
@@ -114,7 +108,7 @@ class BookDetails extends Component {
             </select>
           </div>
         </p>
-      </div>
+      </p>
     )
   }
 }

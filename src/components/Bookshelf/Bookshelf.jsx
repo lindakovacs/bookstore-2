@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import axios from 'axios'
-// import { Link } from 'react-router-dom'
-// import { FormGroup, FormControl, ControlLabel, ListGroup, ListGroupItem, Media } from 'react-bootstrap'
+import { Link } from 'react-router-dom'
+import { ListGroupItem, Media } from 'react-bootstrap'
 
 class Bookshelf extends Component {
   state = {
@@ -19,8 +19,28 @@ class Bookshelf extends Component {
       read: 'Read'
     }
   }
+  updateShelf = (e, bookid) => {
+    e.preventDefault()
+    this.setState(
+      {
+        bookId: bookid,
+        selected: e.target.value
+      },
+            () => {
+              axios
+                    .get(`http://localhost:7000/bookshelf/update/${this.state.bookId}/${this.state.selected}`)
+                    .then(response => {
+                      this.setState({
+                        bookOnShelf: this.state.selected ? this.state.selected : 'None'
+                      })
+                    }, this.getMyBookShelf())
+                    .catch(error => {
+                      this.setState({ isError: true })
+                    })
+            }
+        )
+  }
   componentDidMount () {
-    console.log('didmount: ', this.props.match.params.bookId)
     this.getMyBookShelf()
   }
   getMyBookShelf = () => {
@@ -29,7 +49,6 @@ class Bookshelf extends Component {
         axios
                     .get(`http://localhost:7000/bookshelf`)
                     .then(response => {
-                      console.log('axios: ', response.data.book)
                       this.setState({
                         myBooks: response.data.books
                       })
@@ -41,7 +60,6 @@ class Bookshelf extends Component {
     }
   }
   render () {
-    console.log('bookshelf: ', this.state.myBooks)
     return (
       <div>
         {this.state.myBooks
@@ -49,15 +67,72 @@ class Bookshelf extends Component {
                       return (
                         <div>
                           <h2>{this.state.shelfData[shelf[0]]}</h2>
-                          <p>
-                            {Object.values(shelf[1]).map((book, index) => {
-                              return (
-                                <p>
-                                  {book.id}, {book.title}, {book.authors}, {book.imageLinks.thumbnail}
-                                </p>
-                              )
-                            })}
-                          </p>
+                          {Object.values(shelf[1]).map((book, index) => {
+                            const link = '/book/' + book.id
+                            return (
+                              <ListGroupItem>
+                                <Media>
+                                  <Media.Left align='top'>
+                                    <Link to={link}>
+                                      <img
+                                        src={book.imageLinks ? book.imageLinks.thumbnail : ''}
+                                        alt={book.title}
+                                                          />
+                                    </Link>
+                                  </Media.Left>
+                                  <Media.Body>
+                                    <Media.Heading>
+                                      <Link to={link}>
+                                        {book.title}
+                                                              :
+                                                              {''}
+                                        {book.subtitle ? <p>{book.subtitle}</p> : ''}
+                                      </Link>
+                                    </Media.Heading>
+                                    <p>
+                                                          Author(s):<br />
+                                      {book.authors ? book.authors.join(', ') : book.authors}
+                                    </p>
+                                    <p>
+                                      <h4>Change Shelf</h4>
+                                      <span>
+                                        <select
+                                              name='select'
+                                              onChange={e => this.updateShelf(e, book.id)}
+                                                              >
+                                              {Object.entries(
+                                                                      this.state.shelfData
+                                                                  ).map((shelf, idx) => {
+                                                                    if (book.shelf === shelf[0]) {
+                                                                      return (
+                                                                        <option
+                                                                          value={shelf[0]}
+                                                                          selected={shelf[0]}
+                                                                              >
+                                                                          {shelf[1]}
+                                                                        </option>
+                                                                      )
+                                                                    } else {
+                                                                      return (
+                                                                        <option
+                                                                          value={shelf[0]}
+                                                                          selected={
+                                                                                      this.state.selected === shelf[0]
+                                                                                  }
+                                                                              >
+                                                                          {shelf[1]}
+                                                                        </option>
+                                                                      )
+                                                                    }
+                                                                  })}
+                                            </select>
+                                      </span>
+                                    </p>
+                                  </Media.Body>
+                                </Media>
+                              </ListGroupItem>
+                            )
+                          })}
                         </div>
                       )
                     })
