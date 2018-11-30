@@ -38,6 +38,7 @@ class BookDetails extends Component {
         )
   }
   componentDidMount () {
+    console.log('didmount: ', this.props.match.params.bookId)
     this.getBookDetails()
   }
   getBookDetails = () => {
@@ -52,7 +53,8 @@ class BookDetails extends Component {
                         .then(response => {
                           this.setState({
                             book: response.data.book,
-                            bookOnShelf: response.data.book.shelf
+                            bookOnShelf: response.data.book.shelf,
+                            selected: response.data.book.shelf
                           })
                         })
                         .catch(error => {
@@ -65,7 +67,7 @@ class BookDetails extends Component {
   render () {
     const { book } = this.state
     return (
-      <p>
+      <div>
         <Media>
           <Media.Left align='top'>
             <img src={book.imageLinks ? book.imageLinks.thumbnail : ''} alt={book.title} />
@@ -85,21 +87,22 @@ class BookDetails extends Component {
             <p>Categories: {book.categories ? book.categories.join(', ') : 'None'}</p>
           </Media.Body>
         </Media>
-        <p>
+        <div>
           <h3>Shelf</h3>
           <div>
-            <select name='select' onChange={this.updateShelf}>
+            <select name='select' value={this.state.selected} onChange={this.updateShelf}>
               {Object.entries(this.state.shelfData).map((shelf, idx) => {
+                const key = 'shelf-index-' + idx
                 if (this.state.bookOnShelf === shelf[0]) {
                   console.log('current shelf: ', this.state.selected)
                   return (
-                    <option value={shelf[0]} selected={shelf[0]}>
+                    <option key={key} value={shelf[0]}>
                         {shelf[1]}
                       </option>
                   )
                 } else {
                   return (
-                    <option value={shelf[0]} selected={this.state.selected === shelf[0]}>
+                    <option key={key} value={shelf[0]}>
                         {shelf[1]}
                       </option>
                   )
@@ -107,8 +110,8 @@ class BookDetails extends Component {
               })}
             </select>
           </div>
-        </p>
-      </p>
+        </div>
+      </div>
     )
   }
 }

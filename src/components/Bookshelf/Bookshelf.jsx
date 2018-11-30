@@ -64,13 +64,15 @@ class Bookshelf extends Component {
       <div>
         {this.state.myBooks
                     ? Object.entries(this.state.myBooks).map((shelf, idx) => {
+                      const key = 'shelf-index-' + idx
                       return (
-                        <div>
+                        <div key={key}>
                           <h2>{this.state.shelfData[shelf[0]]}</h2>
                           {Object.values(shelf[1]).map((book, index) => {
                             const link = '/book/' + book.id
+                            const key = 'book-index-' + index
                             return (
-                              <ListGroupItem>
+                              <ListGroupItem key={key}>
                                 <Media>
                                   <Media.Left align='top'>
                                     <Link to={link}>
@@ -93,7 +95,7 @@ class Bookshelf extends Component {
                                                           Author(s):<br />
                                       {book.authors ? book.authors.join(', ') : book.authors}
                                     </p>
-                                    <p>
+                                    <div>
                                       <h4>Change Shelf</h4>
                                       <span>
                                         <select
@@ -103,9 +105,11 @@ class Bookshelf extends Component {
                                               {Object.entries(
                                                                       this.state.shelfData
                                                                   ).map((shelf, idx) => {
+                                                                    const key = 'shelf-index-' + idx
                                                                     if (book.shelf === shelf[0]) {
                                                                       return (
                                                                         <option
+                                                                          key={key}
                                                                           value={shelf[0]}
                                                                           selected={shelf[0]}
                                                                               >
@@ -115,6 +119,7 @@ class Bookshelf extends Component {
                                                                     } else {
                                                                       return (
                                                                         <option
+                                                                          key={key}
                                                                           value={shelf[0]}
                                                                           selected={
                                                                                       this.state.selected === shelf[0]
@@ -127,7 +132,7 @@ class Bookshelf extends Component {
                                                                   })}
                                             </select>
                                       </span>
-                                    </p>
+                                    </div>
                                   </Media.Body>
                                 </Media>
                               </ListGroupItem>
