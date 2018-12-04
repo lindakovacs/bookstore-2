@@ -38,7 +38,6 @@ class BookDetails extends Component {
         )
   }
   componentDidMount () {
-    console.log('didmount: ', this.props.match.params.bookId)
     this.getBookDetails()
   }
   getBookDetails = () => {
@@ -78,7 +77,8 @@ class BookDetails extends Component {
               {book.subtitle ? <p>{book.subtitle}</p> : ''}
             </Media.Heading>
             <p>
-              <strong>Author(s):</strong><br />
+              <strong>Author(s):</strong>
+              <br />
               {book.authors ? book.authors.join(', ') : book.authors}
             </p>
             <p>{book.description}</p>
@@ -88,13 +88,17 @@ class BookDetails extends Component {
           </Media.Body>
         </Media>
         <div>
-          <h3>Shelf</h3>
+          <h4>Current Shelf</h4>
           <div>
-            <select name='select' value={this.state.selected} onChange={this.updateShelf}>
+            <select
+              name='select'
+              class='form-control SelectShelf'
+              value={this.state.selected}
+              onChange={e => this.updateShelf(e)}
+                        >
               {Object.entries(this.state.shelfData).map((shelf, idx) => {
                 const key = 'shelf-index-' + idx
                 if (this.state.bookOnShelf === shelf[0]) {
-                  console.log('current shelf: ', this.state.selected)
                   return (
                     <option key={key} value={shelf[0]}>
                         {shelf[1]}

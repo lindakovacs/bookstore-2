@@ -45,18 +45,15 @@ class Search extends Component {
         isError: false
       })
     }
-        // console.log("queryInput: ", this.state.queryInput);
   }
 
   componentDidMount () {
-        // console.log('componentDidMount');
     this.setState({
       queryInput: this.state.queryInput
     })
   }
 
   render () {
-    console.log('state: ', this.state)
     const { results } = this.state
     return (
       <div>
@@ -77,8 +74,6 @@ class Search extends Component {
           {this.state.isError ? <p>No Search Results Found</p> : ''}
           {results &&
                         results.map((book, index) => {
-                          console.log(book)
-                            // const key = 'book-' + index;
                           const link = '/book/' + book.id
                           return (
                             <ListGroupItem>

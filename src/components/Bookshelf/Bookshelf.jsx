@@ -97,41 +97,33 @@ class Bookshelf extends Component {
                                     </p>
                                     <div>
                                       <h4>Change Shelf</h4>
-                                      <span>
+                                      <div>
                                         <select
                                               name='select'
+                                              class='form-control SelectShelf'
+                                              defaultValue={book.shelf}
                                               onChange={e => this.updateShelf(e, book.id)}
                                                               >
                                               {Object.entries(
                                                                       this.state.shelfData
                                                                   ).map((shelf, idx) => {
                                                                     const key = 'shelf-index-' + idx
-                                                                    if (book.shelf === shelf[0]) {
+                                                                    if (this.state.bookOnShelf === shelf[0]) {
                                                                       return (
-                                                                        <option
-                                                                          key={key}
-                                                                          value={shelf[0]}
-                                                                          selected={shelf[0]}
-                                                                              >
+                                                                        <option key={key} value={shelf[0]}>
                                                                           {shelf[1]}
                                                                         </option>
                                                                       )
                                                                     } else {
                                                                       return (
-                                                                        <option
-                                                                          key={key}
-                                                                          value={shelf[0]}
-                                                                          selected={
-                                                                                      this.state.selected === shelf[0]
-                                                                                  }
-                                                                              >
+                                                                        <option key={key} value={shelf[0]}>
                                                                           {shelf[1]}
                                                                         </option>
                                                                       )
                                                                     }
                                                                   })}
                                             </select>
-                                      </span>
+                                      </div>
                                     </div>
                                   </Media.Body>
                                 </Media>
